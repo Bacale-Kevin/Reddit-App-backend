@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
 import morgan from "morgan";
+import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth';
 
@@ -12,10 +13,12 @@ const app = express();
 //accespt json request. This replaces body-parser
 app.use(express.json());
 app.use(morgan("dev"));
+//apply middleware to trim incomming request
 app.use(trim)
+app.use(cookieParser())
 
 app.get("/", (req, res) => res.send("Hello world"));
-app.use('/api', authRoutes)
+app.use('/api/auth/', authRoutes)
 
 app.listen(5000, async () => {
     console.log("Server running at http://localhost:5000");
