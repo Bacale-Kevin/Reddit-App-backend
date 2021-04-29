@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 
-import { User } from "../entities/User";
+import  User  from "../entities/User";
 
 
 exports.register = async (req: Request, res: Response) => {

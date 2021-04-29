@@ -1,10 +1,12 @@
 import { IsEmail, Length } from "class-validator";
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, Index, CreateDateColumn, BeforeInsert } from "typeorm";
+import { Entity as ToEntity, Column, Index, BeforeInsert, OneToMany } from "typeorm";
 import bcrypt from 'bcrypt';
-import { classToPlain, Exclude } from 'class-transformer';
+import { Exclude } from 'class-transformer';
+import Entity from './Entity';
+import Post from "./Post";
 
-@Entity('users')
-export class User extends BaseEntity {
+@ToEntity('users')
+export default class User extends Entity {
 
     /**
      ** Exclude specifies the different fields to be excluded
@@ -14,10 +16,6 @@ export class User extends BaseEntity {
         Object.assign(this, user)
 
     }
-
-    @Exclude()
-    @PrimaryGeneratedColumn()
-    id: number;
 
     @Index()
     @IsEmail()
@@ -34,11 +32,8 @@ export class User extends BaseEntity {
     @Length(6, 255)
     password: string;
 
-    @CreateDateColumn()
-    createdAt: Date
-
-    @CreateDateColumn()
-    updatedAt: Date
+    @OneToMany(() => Post, post => post.user)
+    posts: [];
 
     // before a record is created in the database do this
     @BeforeInsert()
@@ -46,11 +41,5 @@ export class User extends BaseEntity {
         this.password = await bcrypt.hash(this.password, 6)
     }
 
-    /**
-     * * classToPlain move accross our fields and specifies which fields to be excluded and return the rest
-     */
-    toJSON() {
-        return classToPlain(this)
-    }
 
 }

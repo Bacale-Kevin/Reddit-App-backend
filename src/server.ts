@@ -5,6 +5,8 @@ import morgan from "morgan";
 import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth';
+import postRoutes from './routes/posts';
+import subRoutes from './routes/subs';
 
 import trim from './middleware/trim';
 
@@ -19,9 +21,13 @@ app.use(cookieParser())
 
 app.get("/", (req, res) => res.send("Hello world"));
 app.use('/api/auth/', authRoutes)
+app.use('/api/posts', postRoutes)
+app.use('/api/subs', subRoutes)
 
-app.listen(5000, async () => {
-    console.log("Server running at http://localhost:5000");
+const PORT = process.env.PORT
+
+app.listen(PORT, async () => {
+    console.log(`Server running at http://localhost:${PORT}`);
     try {
         //function to connect to typeorm database
         await createConnection();
