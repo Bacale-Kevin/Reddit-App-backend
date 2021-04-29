@@ -1,8 +1,7 @@
-import { Entity as ToEntity, Column, Index, BeforeInsert, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { Entity as ToEntity, Column, Index,  ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import Entity from './Entity';
 import User from "./User";
 import Post from "./Post";
-import { makeId, slugify } from "../utils/helpers";
 
 @ToEntity('subs')
 export default class Sub extends Entity {

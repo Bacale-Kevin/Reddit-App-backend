@@ -70,7 +70,7 @@ exports.login = async (req: Request, res: Response) => {
         if (!passwordMatches) return res.status(401).json({ password: 'Password is incorrect' })
 
         //returnig a token
-        const token = jwt.sign({ username }, process.env.JWT_SECRET)
+        const token = jwt.sign({ username }, process.env.JWT_SECRET!)
 
         // res.set() is a method used to setHeaders when sending back a response to the client
         res.set('Set-Cookie', cookie.serialize('token', token, {

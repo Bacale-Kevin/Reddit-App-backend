@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import  User  from "../entities/User";
+import User from "../entities/User";
 
 exports.isAuth = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -11,7 +11,7 @@ exports.isAuth = async (req: Request, res: Response, next: NextFunction) => {
         if (!token) throw new Error('Unauthenticated')
 
         // extracting the username from the tpken
-        const { username }: any = jwt.verify(token, process.env.JWT_SECRET)
+        const { username }: any = jwt.verify(token, process.env.JWT_SECRET!)
 
         const user = await User.findOne({ username })
 

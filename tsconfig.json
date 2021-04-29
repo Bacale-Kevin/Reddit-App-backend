@@ -4,6 +4,13 @@
          "es5",
          "es6"
       ],
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "resolveJsonModule": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "noImplicitThis": true,
+
       "target": "es5",
       "module": "commonjs",
       "moduleResolution": "node",

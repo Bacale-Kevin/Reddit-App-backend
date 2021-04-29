@@ -17,7 +17,7 @@ exports.createPost = async (req: Request, res: Response) => {
 
     try {
 
-        const subRecord = await Sub.findOneOrFail({name: sub})
+        const subRecord = await Sub.findOneOrFail({ name: sub })
 
         const post = new Post({ title, body, user, sub: subRecord })
         await post.save()
@@ -26,5 +26,33 @@ exports.createPost = async (req: Request, res: Response) => {
     } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Something went wrong" })
+    }
+}
+
+
+exports.getPosts = async (_: Request, res: Response) => {
+    try {
+        const posts = await Post.find({
+            order: { createdAt: 'DESC' },
+            // relations: ['sub']
+        })
+
+        return res.json(posts)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ error: "Something went wromg" })
+    }
+}
+
+exports.getPost = async (req: Request, res: Response) => {
+
+    const { identifier, slug } = req.params
+    try {
+        const post = await Post.findOneOrFail({ identifier, slug }, { relations: ['sub'] })
+
+        return res.json(post)
+    } catch (err) {
+        console.log(err)
+        return res.status(404).json({ error: "Post not found" })
     }
 }
