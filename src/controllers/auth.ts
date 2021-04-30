@@ -7,7 +7,16 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 
-import  User  from "../entities/User";
+import User from "../entities/User";
+
+//function to make on validation errors
+const mapErrors = (errors: Object[]) => {
+
+    return errors.reduce((prev: any, err: any) => {
+        prev[err.property] = Object.entries(err.constraints)[0][1]
+        return prev
+    }, {})
+}
 
 
 exports.register = async (req: Request, res: Response) => {
@@ -26,13 +35,25 @@ exports.register = async (req: Request, res: Response) => {
 
         //returning an error if there is one
         if (Object.keys(errors).length > 0) {
+
+
             return res.status(400).json(errors)
         }
 
         // TODO: Create ther user
         const user = new User({ email, username, password })
         errors = await validate(user)
-        if (errors.length > 0) return res.status(400).json({ errors })
+        if (errors.length > 0) {
+
+            let mappedErrors: any = {}
+            errors.forEach((e: any) => {
+                const key = e.property
+                const value = Object.entries(e.constraints)[0][1]
+                mappedErrors[key] = value
+            });
+            // console.log(mappedErrors)
+            return res.status(400).json(mapErrors(errors))
+        }
         await user.save()
 
         // TODO: Return ther user
@@ -63,7 +84,7 @@ exports.login = async (req: Request, res: Response) => {
 
         const user = await User.findOne({ username })
         console.log({ username });
-        if (!user) return res.status(404).json({ error: "User not found" })
+        if (!user) return res.status(404).json({ username: "User not found" })
 
         const passwordMatches = await bcrypt.compare(password, user.password)
 
